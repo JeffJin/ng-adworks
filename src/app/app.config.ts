@@ -8,19 +8,17 @@ import {
   withI18nSupport,
   withIncrementalHydration
 } from '@angular/platform-browser';
+// import { provideRouterStore } from '@ngrx/router-store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideClientHydration(
-      withHttpTransferCacheOptions({
+    provideClientHydration(withHttpTransferCacheOptions({
         includeHeaders: [],
         includePostRequests: false,
         includeRequestsWithAuthHeaders: false,
-      }),
-      withI18nSupport(),
-      withIncrementalHydration()
-    )
-  ]
+    }), withI18nSupport(), withIncrementalHydration()),
+    // provideRouterStore()
+]
 };
