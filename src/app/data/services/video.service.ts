@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import { HttpClient, HttpEventType, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
 import {VideoDto} from '../models/dtos';
-import {environment} from '../../environments/environment';
+import {environment} from '../../../environments/environment';
 import {mockData} from "./mock-data";
 
 @Injectable()

@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "externalDependencies":[""],
             "outputPath": "dist/ng-adworks",
             "index": "src/index.html",
             "browser": "src/main.ts",

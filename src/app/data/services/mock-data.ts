@@ -130,7 +130,7 @@ export const mockData = {
       duration: 3090,
       tags: '',
       mainThumbnail: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
-      thumbnails: ['http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg'],
+      thumbnails: [ 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg' ],
       createdOn: '2018-12-10T13:45:00.000Z',
       createdBy: 'jeff@jeffjin.com'
     },
@@ -142,7 +142,7 @@ export const mockData = {
       duration: 3000,
       tags: '',
       mainThumbnail: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg',
-      thumbnails: ['http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg'],
+      thumbnails: [ 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg' ],
       createdOn: '2018-12-10T13:45:00.000Z',
       createdBy: 'jeff@jeffjin.com'
     },
@@ -154,7 +154,7 @@ export const mockData = {
       description: 'HBO GO now works with Chromecast -- the easiest way to enjoy online video on your TV',
       tags: '',
       mainThumbnail: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg',
-      thumbnails: ['http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg'],
+      thumbnails: [ 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg' ],
       createdOn: '2018-12-10T13:45:00.000Z',
       createdBy: 'jeff@jeffjin.com'
     },
@@ -166,7 +166,7 @@ export const mockData = {
       duration: 3070,
       tags: '',
       mainThumbnail: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg',
-      thumbnails: ['http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg'],
+      thumbnails: [ 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg' ],
       createdOn: '2018-12-10T13:45:00.000Z',
       createdBy: 'jeff@eworks.io'
     },
@@ -178,7 +178,7 @@ export const mockData = {
       duration: 3800,
       tags: '',
       mainThumbnail: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg',
-      thumbnails: ['http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg'],
+      thumbnails: [ 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg' ],
       createdOn: '2018-12-10T13:45:00.000Z',
       createdBy: 'jeff@eworks.io'
     },
@@ -190,7 +190,7 @@ export const mockData = {
       duration: 3500,
       tags: '',
       mainThumbnail: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg',
-      thumbnails: ['http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg'],
+      thumbnails: [ 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg' ],
       createdOn: '2018-12-10T13:45:00.000Z',
       createdBy: 'jeff@eworks.io'
     },
@@ -251,19 +251,13 @@ export const mockData = {
       createdBy: 'jeff@eworks.io'
     },
   ],
-  devices: [
-
-  ],
-  playlists: [
-
-  ],
-  groups: [
-
-  ],
+  devices: [],
+  playlists: [],
+  groups: [],
   locations: [
-
+    {id: '123'}
   ],
   customers: [
-
+    { id: '1234' }
   ]
 };

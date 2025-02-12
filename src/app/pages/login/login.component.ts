@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
-import { UserDto } from '../data/models/dtos';
+import { IUser } from '../../data/models/dtos';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +21,7 @@ import { UserDto } from '../data/models/dtos';
 })
 export class LoginComponent {
   loginForm: UntypedFormGroup;
-  user$: Observable<UserDto> | null = null;
+  user$: Observable<IUser> | null = null;
 
   userName = new UntypedFormControl('', [
     Validators.required
@@ -29,11 +29,14 @@ export class LoginComponent {
   password = new UntypedFormControl('', [
     Validators.required
   ]);
+  rememberMe = new UntypedFormControl('', [
+  ]);
 
   constructor(public fb: UntypedFormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
       email: [''],
       password: [''],
+      rememberMe: [false],
     });
     // this.user$ = this.store.select(selectUser);
   }

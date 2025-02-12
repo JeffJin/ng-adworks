@@ -1,4 +1,4 @@
-export interface AudioDto extends EntityDto {
+export interface IAudio extends IEntity {
   encodedFilePath: string;
   cloudUrl: string;
   duration: number;
@@ -9,7 +9,7 @@ export interface AudioDto extends EntityDto {
   tags: string;
 }
 
-export interface DeviceDto extends EntityDto {
+export interface IDevice extends IEntity {
   serialNumber: string;
   deviceGroupName: string;
   organizationName: string;
@@ -18,51 +18,51 @@ export interface DeviceDto extends EntityDto {
   appVersion: number;
   locationId: string;
   activatedOn?: Date;
-  lastStatus?: DeviceStatusDto;
+  // lastStatus?: DeviceStatusDto;
   isOnline?: boolean;
-  licenses?: Array<LicenseDto>;
+  // licenses?: Array<LicenseDto>;
 }
 
-export interface LicenseDto extends EntityDto {
+export interface ILicense extends IEntity {
   deviceId: string;
   type: string;
   expireOn: Date;
 }
 
 
-export interface DeviceStatusDto extends EntityDto {
+export interface IDeviceStatus extends IEntity {
   deviceId: string;
   status: string;
 }
 
-export interface GroupDto extends EntityDto {
+export interface IGroup extends IEntity {
   name: string;
   numOfDevices?: number;
   numOfPlaylists?: number;
 }
 
-export interface PlaylistDto extends EntityDto {
+export interface IPlaylist extends IEntity {
   name: string;
   startDate: Date;
   endDate: Date;
   // daily start and end time in minutes, offset from midnight
   startTime: number;
   endTime: number;
-  deviceGroups: GroupDto[];
-  subPlaylists: SubPlaylistDto[];
+  // deviceGroups: GroupDto[];
+  // subPlaylists: SubPlaylistDto[];
 }
 
 
-export interface SubPlaylistDto extends EntityDto {
+export interface ISubPlaylist extends IEntity {
   playlistId: string;
   positionX: number; // top left corner in a screen
   positionY: number; // top left corner in a screen
   width: number; // 0 to 100 percentage
   height: number; // 0 to 100 percentage
-  playlistItems: PlaylistItemDto[];
+  // playlistItems: PlaylistItemDto[];
 }
 
-export interface PlaylistItemDto extends EntityDto {
+export interface IPlaylistItem extends IEntity {
   index: number;
   subPlaylistId: string;
   mediaAssetId: string; // media asset id
@@ -73,22 +73,31 @@ export interface PlaylistItemDto extends EntityDto {
   cacheLocation: string;
 }
 
-export interface CustomerDto extends EntityDto {
+export interface ICustomer extends IEntity {
   name: string;
 }
 
-export interface LocationDto extends EntityDto {
+export interface ILocation extends IEntity {
   address: string;
   locale: string;
   timezoneOffset: number;
 }
 
-export interface PlaylistGroupDto extends EntityDto {
+export interface IPlaylistGroup extends IEntity {
   playlistId: string;
   groupId: string;
 }
 
-export interface ImageDto extends EntityDto {
+export interface VisibleImage {
+  id: string,
+  url: string,
+  width: number,
+  height: number,
+  description?: string;
+  title?: string;
+}
+
+export interface IImage extends IEntity {
   encodedFilePath: string;
   cloudUrl: string;
   category: string;
@@ -98,7 +107,7 @@ export interface ImageDto extends EntityDto {
   tags: string;
 }
 
-export interface VideoDto extends EntityDto {
+export interface IVideo extends IEntity {
   cloudUrl: string;
   encodedFilePath: string;
   progressiveUrl: string;
@@ -117,17 +126,33 @@ export interface VideoDto extends EntityDto {
   assetType?: string;
 }
 
-export interface UserDto{
+export interface IUser{
   userName: string;
   email: string;
   phoneNumber: string;
   token?: string;
 }
 
-export class EntityDto{
+export interface ILoginForm{
+  email: string;
+  password: string;
+  status: string;
+  message: string;
+}
+
+export interface IEntity{
   id?: string;
   createdOn?: Date;
   updatedOn?: Date;
   createdBy?: string;
   updatedBy?: string;
+}
+
+export interface ITimeZone {
+  value: string,
+  abbr: string,
+  offset: number,
+  isdst: boolean,
+  text: string,
+  utc: string[]
 }

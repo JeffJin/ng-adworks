@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import {UserDto} from '../models/dtos';
+import { IUser } from '../models/dtos';
 
 @Injectable()
 export class CacheService {
 
-  constructor() { }
+  constructor() {
+  }
 
   getToken(): string {
     const token = localStorage.getItem('jtw');
@@ -20,17 +21,16 @@ export class CacheService {
 
 
   getUser(): any {
-    try{
+    try {
       const item = localStorage.getItem('user') || '';
       return JSON.parse(item);
-    }
-    catch (err) {
+    } catch (err) {
       return null;
     }
   }
 
   setUser(user: any): void {
-    const dto: UserDto = {
+    const dto: IUser = {
       userName: user.userName,
       email: user.email,
       phoneNumber: user.phoneNumber

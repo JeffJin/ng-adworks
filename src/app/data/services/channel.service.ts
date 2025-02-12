@@ -1,8 +1,7 @@
 import {Injectable, Inject} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Subject} from 'rxjs';
-import {HubConnection, HubConnectionBuilder, LogLevel} from '@microsoft/signalr';
-import {environment} from '../../environments/environment';
+
 
 /**
  * When SignalR runs it will add functions to the global $ variable
@@ -21,27 +20,54 @@ export enum ConnectionState {
   Disconnected = 4
 }
 
-export class ChannelConfig {
+export interface ChannelConfig {
   url: string;
   hubName: string;
   channel: string;
 }
 
 export class ChannelEvent {
-  Name: string;
-  ChannelName: string;
-  Timestamp: Date;
-  Data: any;
-  Json: string;
+  get ChannelName(): string {
+    return this._ChannelName;
+  }
+
+  set ChannelName(value: string) {
+    this._ChannelName = value;
+  }
+  private _Name: string;
 
   constructor() {
     this.Timestamp = new Date();
+    this._ChannelName = '';
+    this._Json = '';
+    this._Name = '';
+  }
+
+  private _ChannelName: string;
+  Timestamp: Date;
+  Data: any;
+  private _Json: string;
+
+  get Json(): string {
+    return this._Json;
+  }
+
+  set Json(value: string) {
+    this._Json = value;
+  }
+
+  get Name(): string {
+    return this._Name;
+  }
+
+  set Name(value: string) {
+    this._Name = value;
   }
 }
 
-class ChannelSubject {
-  channel: string;
-  subject: Subject<ChannelEvent>;
+export class ChannelSubject {
+  channel: string = '';
+  subject: Subject<ChannelEvent> | null = null;
 }
 
 /**
@@ -58,19 +84,19 @@ export class ChannelService {
    * connection is ready or not. On a successful connection this
    * stream will emit a value.
    */
-  starting$: Observable<any>;
+  starting$: Observable<any> | null = null;
 
   /**
    * connectionState$ provides the current state of the underlying
    * connection as an observable stream.
    */
-  connectionState$: Observable<ConnectionState>;
+  connectionState$: Observable<ConnectionState> | null = null;
 
   /**
    * error$ provides a stream of any error messages that occur on the
    * SignalR connection
    */
-  error$: Observable<string>;
+  error$: Observable<string> | null = null;
 
   // These are used to feed the public observables
   //
@@ -126,7 +152,7 @@ export class ChannelService {
    * Get an observable that will contain the data associated with a specific
    * channel
    * */
-  sub(channel: string): Observable<ChannelEvent> {
+  sub(channel: string): Observable<ChannelEvent> | undefined {
 
     // Try to find an observable that we already created for the requested
     //  channel
@@ -139,7 +165,7 @@ export class ChannelService {
     //
     if (channelSub !== undefined) {
       console.log(`Found existing observable for ${channel} channel`);
-      return channelSub.subject.asObservable();
+      return channelSub.subject?.asObservable();
     }
 
     //
@@ -162,17 +188,17 @@ export class ChannelService {
     //  the starting$ stream since that won't emit a value until the connection
     //  is ready
     //
-    this.starting$.subscribe(() => {
+    this.starting$?.subscribe(() => {
         this._hubConnection.invoke('Subscribe', channel)
           .done(() => {
             console.log(`Successfully subscribed to ${channel} channel`);
           })
           .fail((error: any) => {
-            channelSub.subject.error(error);
+            channelSub.subject?.error(error);
           });
       },
       (error: any) => {
-        channelSub.subject.error(error);
+        channelSub.subject?.error(error);
       });
 
     return channelSub.subject.asObservable();

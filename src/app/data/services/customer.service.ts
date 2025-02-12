@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
-import {CustomerDto, DeviceDto} from '../models/dtos';
-import {Observable} from 'rxjs';
-import {environment} from '../../environments/environment';
-import {mockData} from './mock-data';
+import { environment } from '../../../environments/environment';
+import { ICustomer, IDevice } from '../models/dtos';
+import { Observable } from 'rxjs';
+import { mockData } from './mock-data';
 
 @Injectable()
 export class CustomerService {
 
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
 
   getCustomers(pageIndex: number = 0, pageSize: number = 12): Observable<any> {
     if (environment.noBackend) {
@@ -21,25 +22,25 @@ export class CustomerService {
     return this.httpClient.get(`${environment.apiBaseUrl}/organizations`);
   }
 
-  searchCustomers(keywords): Observable<any> {
+  searchCustomers(keywords: string): Observable<any> {
     return this.httpClient.get(`${environment.apiBaseUrl}/organizations/search?keywords=${keywords}`);
   }
 
   getCustomer(id: string): Observable<any> {
     if (environment.noBackend) {
       return new Observable(observer => {
-        observer.next(mockData.customers.find(item => item.id === id ));
+        observer.next(mockData.customers.find(item => item.id === id));
         observer.complete();
       });
     }
     return this.httpClient.get(`${environment.apiBaseUrl}/organizations/${id}`);
   }
 
-  addCustomer(dto: CustomerDto): Observable<any> {
+  addCustomer(dto: ICustomer): Observable<any> {
     return this.httpClient.post(`${environment.apiBaseUrl}/organizations/`, dto);
   }
 
-  updateCustomer(id: string, dto: CustomerDto): Observable<any> {
+  updateCustomer(id: string, dto: ICustomer): Observable<any> {
     return this.httpClient.put(`${environment.apiBaseUrl}/organizations/${id}`, dto);
   }
 
