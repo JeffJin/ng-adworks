@@ -1,0 +1,39 @@
+import { createAction, createActionGroup, emptyProps, props } from '@ngrx/store';
+import { IAudio, IImage, IVideo } from '../../data/models/dtos';
+
+export const VideoActions = createActionGroup({
+  source: 'Videos',
+  events: {
+    'Load Videos':  emptyProps(),
+    'Load Videos Success':  props<{ videos: IVideo[] }>(),
+    'Load Videos Failure':  props<{ error: string }>(),
+    'Add Video': props<{ video: IVideo }>(),
+    'Remove Video': props<{ id: string }>(),
+    'Update Video': props<{ video: IVideo }>(),
+  }
+});
+export const ImageActions = createActionGroup({
+  source: 'Images',
+  events: {
+    'Load Images':  emptyProps(),
+    'Load Images Success':  props<{ images: IImage[] }>(),
+    'Load Images Failure':  props<{ error: string }>(),
+    'Add Image': props<{ image: IImage }>(),
+    'Add Image Success':  props<{ image: IImage }>(),
+    'Remove Image': props<{ id: string }>(),
+    'Remove Image Success':  props<{ id: string }>(),
+    'Update Image': props<{ image: IImage }>(),
+    'Update Image Success': props<{ image: IImage }>(),
+  }
+});
+export const AudioActions = createActionGroup({
+  source: 'Audios',
+  events: {
+    'Load Audios':  emptyProps(),
+    'Load Audios Success':  props<{ audios: IAudio[] }>(),
+    'Load Audios Failure':  props<{ error: string }>(),
+    'Add Audio': props<{ audio: IAudio }>(),
+    'Remove Audio': props<{ id: string }>(),
+    'Update Audio': props<{ audio: IAudio }>(),
+  }
+});

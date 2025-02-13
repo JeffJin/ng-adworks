@@ -7,21 +7,24 @@ import {
   Validators
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
 import { IUser } from '../../data/models/dtos';
+import { authApiActions } from '../../store/actions/auth.actions';
+import { selectUser } from '../../store/selectors';
 
 @Component({
   selector: 'app-login',
   imports: [
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   loginForm: UntypedFormGroup;
-  user$: Observable<IUser> | null = null;
+  user$: Observable<IUser|null>;
 
   userName = new UntypedFormControl('', [
     Validators.required
@@ -32,13 +35,15 @@ export class LoginComponent {
   rememberMe = new UntypedFormControl('', [
   ]);
 
-  constructor(public fb: UntypedFormBuilder, private router: Router) {
+  constructor(private fb: UntypedFormBuilder,
+              private router: Router,
+              private store: Store) {
     this.loginForm = this.fb.group({
       email: [''],
       password: [''],
       rememberMe: [false],
     });
-    // this.user$ = this.store.select(selectUser);
+    this.user$ = this.store.select(selectUser);
   }
 
 
@@ -56,6 +61,6 @@ export class LoginComponent {
         throwError(() => new Error('Invalid login credentials'));
       }
     });
-    // this.store.dispatch(login({userName, password}));
+    this.store.dispatch(authApiActions.login({userName, password}));
   }
 }

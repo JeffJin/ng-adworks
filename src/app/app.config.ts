@@ -1,5 +1,6 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideState, provideStore } from '@ngrx/store';
 
 import { routes } from './app.routes';
 import {
@@ -8,6 +9,8 @@ import {
   withI18nSupport,
   withIncrementalHydration
 } from '@angular/platform-browser';
+import { authReducer, authKey } from './store/reducers/auth.reducers';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 // import { provideRouterStore } from '@ngrx/router-store';
 
 export const appConfig: ApplicationConfig = {
@@ -19,6 +22,8 @@ export const appConfig: ApplicationConfig = {
         includePostRequests: false,
         includeRequestsWithAuthHeaders: false,
     }), withI18nSupport(), withIncrementalHydration()),
-    // provideRouterStore()
+    provideStore(),
+    provideState({ name: authKey, reducer: authReducer }),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
 ]
 };
