@@ -1,5 +1,6 @@
 import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig, provideZoneChangeDetection, isDevMode } from '@angular/core';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState, provideStore } from '@ngrx/store';
@@ -30,6 +31,7 @@ export const appConfig: ApplicationConfig = {
       provide: AUTH_STORAGE_KEY,
       useValue: 'auth.storage',
     },
+    provideAnimationsAsync(),
     provideHttpClient(
       withInterceptors([
         authInterceptor,

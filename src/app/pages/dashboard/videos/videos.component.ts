@@ -19,7 +19,7 @@ export class VideosComponent {
   };
 
   youtubeVideo: IVideo = {
-    cloudUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    cloudUrl: 'https://www.youtube.com/embed/ZwKhufmMxko',
     sourceType: VideoType.IFrame
   }
 

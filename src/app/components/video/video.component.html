@@ -1,14 +1,14 @@
 <div [ngClass]="{'-full-screen': isFullScreen()}">
-  @if(video().sourceType == VideoType.Mp4) {
+  @if(video()?.sourceType == VideoType.Mp4) {
     <video class="h-full w-full rounded-lg" controls>
       <source
-        src="{{video().cloudUrl}}"
+        src="{{video()?.cloudUrl}}"
         type="video/mp4"
       />
       Your browser does not support the video tag.
     </video>
   } @else {
-    <iframe class="aspect-video md:aspect-square ..." src="{{video().cloudUrl}}"></iframe>
+    <iframe class="aspect-video md:aspect-square" src="https://www.youtube.com/embed/ZwKhufmMxko" frameborder="0" allowfullscreen></iframe>
   }
   <button (click)="close()">Close</button>
 </div>
