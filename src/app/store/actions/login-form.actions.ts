@@ -1,15 +1,15 @@
-import { createAction, createActionGroup, emptyProps, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { IUser } from '../../data/models/dtos';
 
 export enum LoginFormStatus {
-  Typing = 'typing',
-  Submitting = 'submitting',
-  Success = 'success',
-  Failure = 'failure',
+  Submitting = 'Submitting',
+  Typing = 'Typing',
+  Failure = 'Failure',
+  Success = 'Success',
   None = '',
 }
 export enum LoginFormErrorType {
-  UserName = 'UserName',
+  Email = 'Email',
   Password = 'Password',
   Server = 'Server',
   Timeout = 'Timeout',
@@ -19,13 +19,14 @@ export interface LoginFormError {
   message: string;
 }
 export interface LoginFormState {
-  userName: string;
+  email: string;
   password: string;
+  rememberMe: boolean;
   status: LoginFormStatus;
   errors: LoginFormError[];
 }
 
-export const loginFormActions = createActionGroup({
+export const LoginFormActions = createActionGroup({
   source: 'Login Form',
   events: {
     // defining events with payload using the `props` function
@@ -33,7 +34,8 @@ export const loginFormActions = createActionGroup({
     'Reset Login Form': emptyProps(),
     'Update Status': props<{ status: LoginFormStatus }>(),
     'Update Error': props<{ error: LoginFormError }>(),
-    'Update UserName': props<{ payload: string }>(),
+    'Update Email': props<{ payload: string }>(),
+    'Update Remember Me': props<{ payload: boolean }>(),
     'Update Password': props<{ payload: string }>(),
     // defining an event with payload using the props factory
     'Login Failure':(error: LoginFormError) => ({ error }),

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {environment} from '../../../environments/environment';
-import {CustomerDto, GroupDto} from '../models/dtos';
+import { IGroup} from '../models/dtos';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {mockData} from "./mock-data";
@@ -34,7 +34,7 @@ export class GroupService {
     return this.httpClient.get(`${environment.apiBaseUrl}/groups/devices/${num}`);
   }
 
-  searchGroups(keywords): Observable<any> {
+  searchGroups(keywords: string): Observable<any> {
     return this.httpClient.get(`${environment.apiBaseUrl}/groups/search?keywords=${keywords}`);
   }
 
@@ -48,7 +48,7 @@ export class GroupService {
     return this.httpClient.get(`${environment.apiBaseUrl}/groups/${id}`);
   }
 
-  updateGroup(id: string, dto: GroupDto): Observable<any> {
+  updateGroup(id: string, dto: IGroup): Observable<any> {
     return this.httpClient.put(`${environment.apiBaseUrl}/groups/${id}`, dto);
   }
 

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { FormGroup, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { UniqueEmailValidator } from '../../shared/directives/unique-email.drective';
 
 @Component({
   selector: 'app-register',
@@ -13,13 +14,20 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
-
-  constructor(private fb: UntypedFormBuilder, private router: Router) {
+  emailControl: FormControl;
+  constructor(private fb: FormBuilder,
+              private emailValidator: UniqueEmailValidator,
+              private router: Router) {
     this.registerForm = this.fb.group({
-      userName: [''],
+      email: [
+        '',
+        Validators.required
+      ],
       password: [''],
       confirmPassword: [''],
     });
+    this.emailControl = this.registerForm.get('email') as FormControl;
+    this.emailControl.addAsyncValidators([this.emailValidator.validate.bind(this.emailValidator)]);
   }
 
   register(): void {

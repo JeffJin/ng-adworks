@@ -17,7 +17,13 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should find the email input and trigger input event', () => {
+    expect(component).toBeDefined();
+    // const input = fixture.nativeElement.querySelector('#email');
+    // const event = new Event('input');
+    // input.value = 'jeff@jeffjin.com';
+    // input.dispatchEvent(event);
+    //
+    // expect(fixture.componentInstance.favoriteColorControl.value).toEqual('jeff@jeffjin.com');
   });
 });

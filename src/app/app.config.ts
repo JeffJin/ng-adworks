@@ -1,5 +1,7 @@
+import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig, provideZoneChangeDetection, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideEffects } from '@ngrx/effects';
 import { provideState, provideStore } from '@ngrx/store';
 
 import { routes } from './app.routes';
@@ -9,21 +11,46 @@ import {
   withI18nSupport,
   withIncrementalHydration
 } from '@angular/platform-browser';
+import { authInterceptor, cachingInterceptor, loggingInterceptor } from './data/services/http.interceptors';
+import { AUTH_SAVED_KEYS, AUTH_STORAGE_KEY } from './store/app.tokens';
+import { AuthEffects } from './store/effects/auth.effects';
+import { VideoEffects } from './store/effects/video.effects';
+import { authMetaReducer } from './store/reducers/meta.reducers';
 import { authReducer, authKey } from './store/reducers/auth.reducers';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 // import { provideRouterStore } from '@ngrx/router-store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {
+      provide: AUTH_SAVED_KEYS,
+      useValue: ['auth','user']
+    },
+    {
+      provide: AUTH_STORAGE_KEY,
+      useValue: 'auth.storage',
+    },
+    provideHttpClient(
+      withInterceptors([
+        authInterceptor,
+        loggingInterceptor,
+        cachingInterceptor
+      ]),
+    ),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideClientHydration(withHttpTransferCacheOptions({
+    provideClientHydration(
+      withHttpTransferCacheOptions({
         includeHeaders: [],
         includePostRequests: false,
         includeRequestsWithAuthHeaders: false,
-    }), withI18nSupport(), withIncrementalHydration()),
+      }),
+      withI18nSupport(),
+      withIncrementalHydration()
+    ),
     provideStore(),
-    provideState({ name: authKey, reducer: authReducer }),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
-]
+    provideState(authKey, authReducer, { metaReducers: [authMetaReducer] }),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+    provideEffects([AuthEffects, VideoEffects])
+  ]
 };

@@ -4,7 +4,7 @@ import { UiAction } from '../models/ui-action';
 
 @Injectable()
 export class UiService {
-  private actionSource = new BehaviorSubject<UiAction>(null);
+  private actionSource = new BehaviorSubject<UiAction|null>(null);
   currentAction = this.actionSource.asObservable();
 
   constructor() {

@@ -1,11 +1,12 @@
-import { Routes } from '@angular/router';
+import { provideRouter, Routes } from '@angular/router';
 import { provideState } from '@ngrx/store';
+import { ErrorComponent } from './error/error.component';
+import { authGuard } from './guards/auth.guard';
 import { AboutComponent } from './pages/about/about.component';
 import { BlogComponent } from './pages/blog/blog.component';
 import { ConfirmEmailComponent } from './pages/confirm-email/confirm-email.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DocumentsComponent } from './pages/dashboard/documents/documents.component';
-import { HistoryComponent } from './pages/dashboard/history/history.component';
 import { ImagesComponent } from './pages/dashboard/images/images.component';
 import { OverviewComponent } from './pages/dashboard/overview/overview.component';
 import { RepotsComponent } from './pages/dashboard/repots/repots.component';
@@ -27,21 +28,25 @@ export const routes: Routes = [
     providers: [
       provideState({
         name: loginFormKey, reducer: loginFormReducer
-      })
+      }),
     ],
-    component: LoginComponent
+    component: LoginComponent,
   },
   { path: 'latest', component: LatestComponent },
   { path: 'not-found', component: NotFoundComponent },
+  { path: 'error', component: ErrorComponent },
   { path: 'blog', component: BlogComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'confirm-email', component: ConfirmEmailComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   {
-    path: 'dashboard', component: DashboardComponent,
+    path: 'dashboard',
+    loadComponent: () => import('./pages/dashboard/dashboard.component')
+      .then(c => c.DashboardComponent),
     providers: [
       provideState({ name: assetsKey, reducer: assetsReducer }),
+
     ],
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -49,8 +54,11 @@ export const routes: Routes = [
       { path: 'videos', component: VideosComponent },
       { path: 'images', component: ImagesComponent },
       { path: 'documents', component: DocumentsComponent },
-      { path: 'history', component: HistoryComponent },
       { path: 'reports', component: RepotsComponent },
-    ]
-  }
+    ],
+    canActivate: [ authGuard ],
+  }, {
+    path: '**', component: NotFoundComponent
+  },
+
 ];

@@ -1,43 +1,44 @@
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { CacheService } from './cache.service';
+import { StorageService } from './storage.service';
 import { Router } from '@angular/router';
 import { mockData } from './mock-data';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+  }
+)
 export class AuthService {
 
-  constructor(private http: HttpClient, private router: Router, private cacheService: CacheService) {
+  constructor(private http: HttpClient, private router: Router, private cacheService: StorageService) {
+  }
+
+  isEmailTaken(email: string): Observable<boolean> {
+    return this.http.post(
+      `${environment.apiBaseUrl}/users/validate_email`,
+      email,
+      { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+    ).pipe(map((response: any) => {
+      return response['DuplicatedEmail'] == 'true';
+    }));
   }
 
   login(email: string, password: string): Observable<any> {
-    const dto = {email, password};
-    return new Observable(observer => {
-      if (environment.noBackend) {
-        observer.next({...mockData.user, email, userName: email});
-        observer.complete();
-      } else {
-        this.http.post(
-          `${environment.apiBaseUrl}/account/login`,
-          dto,
-          {headers: new HttpHeaders({'Content-Type': 'application/json'})}
-        ).subscribe((data: any) => {
-          // store the result into local storage
-          observer.next(data);
-          observer.complete();
-        }, (err) => {
-          observer.error(err);
-        });
-      }
-    });
+    const dto = { email, password };
+    return this.http.post(
+      `${environment.apiBaseUrl}/account/login`,
+      dto,
+      { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+    );
   }
 
   register(userName: string, email: string, password: string, confirmPassword: string): Observable<any> {
     if (password !== confirmPassword) {
       return new Observable(obs => {
-        obs.next({message: 'Passwords do not match', code: 'PasswordsNotMatch'});
+        obs.next({ message: 'Passwords do not match', code: 'PasswordsNotMatch' });
         obs.complete();
       });
     }
@@ -55,14 +56,17 @@ export class AuthService {
         observer.next(mockData.user);
         observer.complete();
       } else {
-        this.http.get(environment.apiBaseUrl + '/user').subscribe((data: any) => {
-          this.cacheService.setUser(data);
-          observer.next(data);
-          observer.complete();
-        }, (err) => {
-          // observer.error(err);
-          return this.router.navigateByUrl('/login');
-        });
+        this.http.get(environment.apiBaseUrl + '/user')
+          .pipe(tap({
+            next: (data: any) => {
+              this.cacheService.setUser(data);
+              observer.next(data);
+              observer.complete();
+            },
+            error: (err) => {
+              observer.error(err);
+            }
+          }));
       }
 
 
@@ -93,7 +97,8 @@ export class AuthService {
     return this.http.post(environment.apiBaseUrl + '/account/logout', null).pipe(tap({
       next: (data: any) => {
         // store the result into local storage
-        this.cacheService.setToken(data);
+        this.cacheService.setToken('');
+        this.cacheService.setXsrfToken(null);
         return data;
       },
       error: (err) => {

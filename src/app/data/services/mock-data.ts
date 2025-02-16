@@ -251,9 +251,18 @@ export const mockData = {
       createdBy: 'jeff@eworks.io'
     },
   ],
-  devices: [],
-  playlists: [],
-  groups: [],
+  devices: [
+    {id: '123'}
+
+  ],
+  playlists: [
+    {id: '123'}
+
+  ],
+  groups: [
+    {id: '123'}
+
+  ],
   locations: [
     {id: '123'}
   ],

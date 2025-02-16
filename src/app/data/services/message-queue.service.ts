@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {CacheService} from './cache.service';
+import {StorageService} from './storage.service';
 
 @Injectable()
 export class MessageQueueService {
 
-  constructor(private cacheService: CacheService) {
+  constructor(private cacheService: StorageService) {
 
   }
 

@@ -24,7 +24,8 @@
         <p class="mt-1 text-lg font-medium text-gray-900">$35</p>
       </a>
 
-      <!-- More products... -->
+      <app-video (updateStatus)="updateVideoStatus($event)" [video]="mp4Video"></app-video>
+      <app-video (updateStatus)="updateVideoStatus($event)" [video]="youtubeVideo"></app-video>
     </div>
   </div>
 </div>

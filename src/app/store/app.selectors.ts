@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { LoginFormState } from './actions/login-form.actions';
+import { LoginFormState, LoginFormStatus } from './actions/login-form.actions';
 import { AssetState, AuthState } from './app.state';
 import { assetsKey } from './reducers/assets.reducers';
 import { authKey } from './reducers/auth.reducers';
@@ -10,6 +10,11 @@ export const selectAuth =  createFeatureSelector<AuthState>(authKey);
 export const selectUser = createSelector(
   selectAuth,
   auth => auth.user,
+);
+
+export const selectIsLoggedIn = createSelector(
+  selectAuth,
+  auth => auth.user !== null && !!auth.user.token && auth.user.token.length > 0,
 );
 
 export const selectAssets = createFeatureSelector<AssetState>(assetsKey);
@@ -31,3 +36,15 @@ export const selectAudios =  createSelector(
 
 export const selectLoginForm = createFeatureSelector<LoginFormState>(loginFormKey);
 
+export const selectLoginFormStatus = createSelector(
+  selectLoginForm,
+  (state: LoginFormState) => state.status,
+)
+export const selectLoginFormEmail = createSelector(
+  selectLoginForm,
+  (state: LoginFormState) => state.email,
+)
+export const selectLoginFormPassword = createSelector(
+  selectLoginForm,
+  (state: LoginFormState) => state.password,
+)

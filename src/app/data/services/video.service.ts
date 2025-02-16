@@ -1,14 +1,21 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
-import { HttpClient, HttpEventType, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpContext,
+  HttpContextToken,
+  HttpEventType,
+  HttpHeaders,
+  HttpRequest,
+  HttpResponse
+} from '@angular/common/http';
 import {IVideo} from '../models/dtos';
 import {environment} from '../../../environments/environment';
+import { CACHING_ENABLED } from './http.interceptors';
 import {mockData} from "./mock-data";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class VideoService {
-
-
   constructor(private httpClient: HttpClient) { }
 
   getVideo(id: string): Observable<any> {
@@ -18,7 +25,9 @@ export class VideoService {
         observer.complete();
       });
     }
-    return this.httpClient.get(`${environment.apiBaseUrl}/videos/${id}`);
+    return this.httpClient.get(`${environment.apiBaseUrl}/videos/${id}`, {
+      context: new HttpContext().set(CACHING_ENABLED, false),
+    });
   }
 
   getVideos(pageIndex: number = 0, pageSize: number = 12, isPrivate: boolean = false): Observable<any> {

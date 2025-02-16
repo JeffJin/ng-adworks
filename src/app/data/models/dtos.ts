@@ -48,8 +48,8 @@ export interface IPlaylist extends IEntity {
   // daily start and end time in minutes, offset from midnight
   startTime: number;
   endTime: number;
-  // deviceGroups: GroupDto[];
-  // subPlaylists: SubPlaylistDto[];
+  deviceGroups?: IGroup[];
+  subPlaylists?: ISubPlaylist[];
 }
 
 
@@ -59,7 +59,7 @@ export interface ISubPlaylist extends IEntity {
   positionY: number; // top left corner in a screen
   width: number; // 0 to 100 percentage
   height: number; // 0 to 100 percentage
-  // playlistItems: PlaylistItemDto[];
+  playlistItems?: IPlaylistItem[];
 }
 
 export interface IPlaylistItem extends IEntity {
@@ -98,30 +98,35 @@ export interface VisibleImage {
 }
 
 export interface IImage extends IEntity {
-  encodedFilePath: string;
+  encodedFilePath?: string;
   cloudUrl: string;
-  category: string;
-  type: string;
-  title: string;
-  description: string;
-  tags: string;
+  category?: string;
+  type?: string;
+  title?: string;
+  description?: string;
+  tags?: string;
+}
+
+export const VideoType = {
+  IFrame: 'IFrame',
+  Mp4: 'Mp4',
 }
 
 export interface IVideo extends IEntity {
   cloudUrl: string;
-  encodedFilePath: string;
-  progressiveUrl: string;
-  hlsUrl: string;
-  duration: number;
-  sourceId: string;
+  encodedFilePath?: string;
+  progressiveUrl?: string;
+  hlsUrl?: string;
+  duration?: number;
+  sourceId?: string;
   sourceType: string;
-  category: string;
-  type: string;
-  title: string;
-  description: string;
-  tags: string;
-  mainThumbnail: string;
-  thumbnails: string[];
+  category?: string;
+  type?: string;
+  title?: string;
+  description?: string;
+  tags?: string;
+  mainThumbnail?: string;
+  thumbnails?: string[];
   checked?: boolean;
   assetType?: string;
 }
@@ -142,8 +147,8 @@ export interface ILoginForm{
 
 export interface IEntity{
   id?: string;
-  createdOn?: Date;
-  updatedOn?: Date;
+  createdOn?: Date | null;
+  updatedOn?: Date | null;
   createdBy?: string;
   updatedBy?: string;
 }

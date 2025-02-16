@@ -1,28 +1,29 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, exhaustMap, map } from 'rxjs/operators';
 import { AuthService } from '../../data/services/auth.service';
-import { CacheService } from '../../data/services/cache.service';
-import { authApiActions } from '../actions/auth.actions';
-import { loginFormActions, LoginFormErrorType } from '../actions/login-form.actions';
-
+import { StorageService } from '../../data/services/storage.service';
+import { AuthApiActions } from '../actions/auth.actions';
+import { LoginFormActions, LoginFormErrorType } from '../actions/login-form.actions';
 
 @Injectable()
 export class AuthEffects {
+  private actions$ = inject(Actions);
+  private authService = inject(AuthService);
+  private cacheService: StorageService = inject(StorageService);
+
   login$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(authApiActions.login),
+      ofType(AuthApiActions.login),
       exhaustMap(action =>
-        this.authService.login(action.userName, action.password).pipe(
+        this.authService.login(action.email, action.password).pipe(
           map(user => {
-            this.cacheService.setUser(user);
-            this.cacheService.setToken(user.token);
-            return authApiActions.loginSuccess({ user });
+            return AuthApiActions.loginSuccess({ user });
           }),
           catchError((error) => {
             console.error(error);
-            return of(loginFormActions.loginFailure({
+            return of(LoginFormActions.loginFailure({
               type: LoginFormErrorType.Server,
               message: 'The email or password is incorrect.'
             }));
@@ -32,10 +33,20 @@ export class AuthEffects {
     )
   );
 
-  constructor(
-    private actions$: Actions,
-    private authService: AuthService,
-    private cacheService: CacheService,
-  ) {
-  }
+  logout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthApiActions.logout),
+      exhaustMap(action =>
+        this.authService.logout().pipe(
+          map(user => {
+            return AuthApiActions.loginSuccess({ user });
+          }),
+          catchError((error) => {
+            console.error(error);
+            return of(AuthApiActions.logoutFailure());
+          })
+        )
+      )
+    )
+  );
 }

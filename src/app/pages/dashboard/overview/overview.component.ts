@@ -8,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class OverviewComponent {
 
+  async loadDevices() {
+    const { DevicesComponent } = await import('../devices/devices.component');
+
+  }
 }

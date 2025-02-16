@@ -1,17 +1,19 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { IVideo } from '../../data/models/dtos';
 import { VideoService } from '../../data/services/video.service';
-import { loadVideos, loadVideosFailure, loadVideosSuccess } from '../actions/assets.actions';
 import { mergeMap, map, catchError } from 'rxjs/operators';
+import { VideoActions } from '../actions/assets.actions';
 
 @Injectable()
 export class VideoEffects {
+  private actions$ = inject(Actions);
+  private videoService = inject(VideoService);
 
   loadVideos$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loadVideos),
+      ofType(VideoActions.loadVideos),
       mergeMap(() => this.videoService.getVideos()
         .pipe(
           map(videos => {
@@ -20,17 +22,11 @@ export class VideoEffects {
               v.assetType = 'Video';
               return v;
             });
-            return loadVideosSuccess({ videos: results });
+            return VideoActions.loadVideosSuccess({ videos: results });
           }),
-          catchError((error) => of(loadVideosFailure({ error })))
+          catchError((error) => of(VideoActions.loadVideosFailure({ error })))
         )
       )
     )
   );
-
-  constructor(
-    private actions$: Actions,
-    private videoService: VideoService
-  ) {
-  }
 }
