@@ -15,6 +15,7 @@ import {
 import { authInterceptor, cachingInterceptor, loggingInterceptor } from './data/services/http.interceptors';
 import { AUTH_SAVED_KEYS, AUTH_STORAGE_KEY } from './store/app.tokens';
 import { AuthEffects } from './store/effects/auth.effects';
+import { ImageEffects } from './store/effects/image.effects';
 import { VideoEffects } from './store/effects/video.effects';
 import { authMetaReducer } from './store/reducers/meta.reducers';
 import { authReducer, authKey } from './store/reducers/auth.reducers';
@@ -25,7 +26,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     {
       provide: AUTH_SAVED_KEYS,
-      useValue: ['auth','user']
+      useValue: ['user']
     },
     {
       provide: AUTH_STORAGE_KEY,
@@ -53,6 +54,10 @@ export const appConfig: ApplicationConfig = {
     provideStore(),
     provideState(authKey, authReducer, { metaReducers: [authMetaReducer] }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    provideEffects([AuthEffects, VideoEffects])
+    provideEffects([
+      AuthEffects,
+      VideoEffects,
+      ImageEffects,
+    ])
   ]
 };

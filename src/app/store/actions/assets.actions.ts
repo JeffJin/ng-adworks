@@ -24,6 +24,10 @@ export const ImageActions = createActionGroup({
     'Remove Image Success':  props<{ id: string }>(),
     'Update Image': props<{ image: IImage }>(),
     'Update Image Success': props<{ image: IImage }>(),
+    'Update Image Failure': props<{ error: string }>(),
+    'Update Image Size': props<{ image: IImage }>(),
+    'Update Image Size Success': props<{ image: IImage }>(),
+    'Update Image Size Failure': props<{ error: string }>(),
   }
 });
 export const AudioActions = createActionGroup({

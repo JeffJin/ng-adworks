@@ -8,7 +8,6 @@ export interface AssetState {
 
 export interface AuthState {
   user: IUser|null;
-  token: string;
   error: string;
 }
 

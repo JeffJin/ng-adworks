@@ -6,7 +6,6 @@ export const authKey = 'auth';
 
 export const initialState: AuthState = {
   user: null,
-  token: '',
   error: '',
 };
 
@@ -16,7 +15,7 @@ export const authReducer = createReducer(
     ({ ...state, user })
   ),
   on(AuthApiActions.logoutSuccess, (state, { }) =>
-    (initialState)
+    ({ ...state, user: null, error: '' })
   ),
 );
 

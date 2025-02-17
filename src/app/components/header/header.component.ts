@@ -32,13 +32,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this. unsubscribeNavigationEnd = this.navigationEnd$.subscribe();
   }
 
-  logout() {
-    this.store.dispatch(AuthApiActions.logout());
-  }
-
   ngOnDestroy() {
     if(this.unsubscribeNavigationEnd) {
       this.unsubscribeNavigationEnd.unsubscribe();
     }
+  }
+
+  logout() {
+    this.store.dispatch(AuthApiActions.logout());
   }
 }

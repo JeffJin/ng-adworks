@@ -1,8 +1,10 @@
-import { Component, Signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
+import { Component, OnInit, Signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { VideoComponent, VideoStatus } from '../../../components/video/video.component';
-import { IVideo, VideoType } from '../../../data/models/dtos';
-import { selectAssets, selectVideos } from '../../../store/app.selectors';
+import { IVideo } from '../../../data/models/dtos';
+import { VideoActions } from '../../../store/actions/assets.actions';
+import { selectVideos } from '../../../store/app.selectors';
 
 @Component({
   selector: 'app-videos',
@@ -12,21 +14,15 @@ import { selectAssets, selectVideos } from '../../../store/app.selectors';
   templateUrl: './videos.component.html',
   styleUrl: './videos.component.scss'
 })
-export class VideosComponent {
-  mp4Video: IVideo = {
-    cloudUrl: 'https://docs.material-tailwind.com/demo.mp4',
-    sourceType: VideoType.Mp4
-  };
-
-  youtubeVideo: IVideo = {
-    cloudUrl: 'https://www.youtube.com/embed/ZwKhufmMxko',
-    sourceType: VideoType.IFrame
-  }
-
+export class VideosComponent implements OnInit {
   readonly videos: Signal<IVideo[]>;
 
   constructor(private store: Store) {
     this.videos = this.store.selectSignal<IVideo[]>(selectVideos);
+  }
+
+  ngOnInit() {
+    this.store.dispatch(VideoActions.loadVideos());
   }
 
   updateVideoStatus($event: VideoStatus) {

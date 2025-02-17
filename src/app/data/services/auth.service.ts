@@ -104,6 +104,8 @@ export class AuthService {
         return data;
       },
       error: (err) => {
+        this.cacheService.remove(this.authStorageKey);
+        this.cacheService.setXsrfToken(null);
         return err;
       }
     }));

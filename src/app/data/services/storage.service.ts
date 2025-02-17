@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { AUTH_STORAGE_KEY } from '../../store/app.tokens';
 import { IUser } from '../models/dtos';
 
 @Injectable({
@@ -7,7 +8,7 @@ import { IUser } from '../models/dtos';
 )
 export class StorageService {
 
-  constructor() {
+  constructor(@Inject(AUTH_STORAGE_KEY) private authStorageKey: string) {
   }
 
   get(key: string): any {
@@ -33,17 +34,11 @@ export class StorageService {
     if (!localStorage) {
       return '';
     }
-    const token = localStorage.getItem('jtw');
-    if (token) {
-      return JSON.parse(token);
+    const user = this.getUser();
+    if (user && user.token) {
+      return user.token;
     }
     return '';
-  }
-
-  setToken(token: string): void {
-    if (localStorage) {
-      localStorage.setItem('jtw', JSON.stringify(token));
-    }
   }
 
   setSavedState(state: any, localStorageKey: string) {
@@ -78,8 +73,9 @@ export class StorageService {
       return null;
     }
     try {
-      const item = localStorage.getItem('user') || '';
-      return JSON.parse(item);
+      const item = localStorage.getItem(this.authStorageKey) || '';
+      const result = JSON.parse(item);
+      return result?.user;
     } catch (err) {
       return null;
     }

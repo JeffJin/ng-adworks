@@ -98,18 +98,20 @@ export interface VisibleImage {
 }
 
 export interface IImage extends IEntity {
-  encodedFilePath?: string;
   cloudUrl: string;
+  fileSize?: number;
   category?: string;
   type?: string;
-  title?: string;
+  title: string;
   description?: string;
   tags?: string;
+  width?: number;
+  height?: number;
 }
 
 export const VideoType = {
   IFrame: 'IFrame',
-  Mp4: 'Mp4',
+  Video: 'Video',
 }
 
 export interface IVideo extends IEntity {
@@ -119,7 +121,7 @@ export interface IVideo extends IEntity {
   hlsUrl?: string;
   duration?: number;
   sourceId?: string;
-  sourceType: string;
+  fileType: string;
   category?: string;
   type?: string;
   title?: string;
@@ -135,14 +137,8 @@ export interface IUser{
   userName: string;
   email: string;
   phoneNumber: string;
+  profileLogo?: string;
   token?: string;
-}
-
-export interface ILoginForm{
-  email: string;
-  password: string;
-  status: string;
-  message: string;
 }
 
 export interface IEntity{

@@ -1,8 +1,11 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { NgClass, NgStyle } from '@angular/common';
-import { Component, HostListener, OnInit, signal } from '@angular/core';
+import { NgStyle } from '@angular/common';
+import { Component, HostListener, OnDestroy, OnInit, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { filter, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { filter, Subscription, tap } from 'rxjs';
+import { AuthApiActions } from '../../store/actions/auth.actions';
+import { selectUser } from '../../store/app.selectors';
 
 @Component({
   selector: 'app-side-nav',
@@ -78,14 +81,16 @@ import { filter, tap } from 'rxjs';
   templateUrl: './side-nav.component.html',
   styleUrl: './side-nav.component.scss'
 })
-export class SideNavComponent implements OnInit {
+export class SideNavComponent implements OnInit, OnDestroy {
   protected isSidebarClosed = signal(true);
   protected hideMobileSidebar: boolean = true;
-
+  protected user;
   private navigationEnd$;
   private isNotificationOpen: boolean = false;
+  private unsubscribeNavigationEnd: Subscription | null = null;
 
-  constructor(private router: Router) {
+  constructor(private store: Store, private router: Router) {
+    this.user = this.store.selectSignal(selectUser);
     this.navigationEnd$ = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       tap(() => (this.isSidebarClosed.set(true)))
@@ -93,7 +98,13 @@ export class SideNavComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.navigationEnd$.subscribe();
+    this. unsubscribeNavigationEnd = this.navigationEnd$.subscribe();
+  }
+
+  ngOnDestroy() {
+    if(this.unsubscribeNavigationEnd) {
+      this.unsubscribeNavigationEnd.unsubscribe();
+    }
   }
 
   get openCloseSidebarSliderMenu(): string {
@@ -115,25 +126,21 @@ export class SideNavComponent implements OnInit {
 
   toggleProfileMenu($event:MouseEvent) {
     $event.stopPropagation();
-    console.log('toggle profile menu');
     this.isProfileMenuOpen = !this.isProfileMenuOpen;
   }
 
   toggleNotifications($event:MouseEvent) {
-    console.log('toggle notifications');
     $event.stopPropagation();
     this.isNotificationOpen = !this.isNotificationOpen;
   }
 
   onSidebarAnimationDone($event: any) {
-    console.log('onSidebarAnimationDone', $event);
     if ($event.toState === 'closed-sidebar') {
       this.hideMobileSidebar = true;
     }
   }
 
   onSidebarAnimationStart($event: any) {
-    console.log('onSidebarAnimationDone', $event);
     if ($event.toState === 'open-sidebar') {
       this.hideMobileSidebar = false;
     }
@@ -141,8 +148,11 @@ export class SideNavComponent implements OnInit {
 
   @HostListener('click', ['$event.target'])
   onClick(element: HTMLElement) {
-    console.log('element', element);
     this.isProfileMenuOpen = false;
     this.isNotificationOpen = false;
+  }
+
+  logout() {
+    this.store.dispatch(AuthApiActions.logout());
   }
 }

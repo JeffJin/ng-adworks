@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { catchError, exhaustMap, map } from 'rxjs/operators';
 import { AuthService } from '../../data/services/auth.service';
 import { StorageService } from '../../data/services/storage.service';
@@ -11,7 +11,7 @@ import { LoginFormActions, LoginFormErrorType } from '../actions/login-form.acti
 export class AuthEffects {
   private actions$ = inject(Actions);
   private authService = inject(AuthService);
-  private cacheService: StorageService = inject(StorageService);
+  private storageService: StorageService = inject(StorageService);
 
   login$ = createEffect(() =>
     this.actions$.pipe(
@@ -43,7 +43,7 @@ export class AuthEffects {
           }),
           catchError((error) => {
             console.error(error);
-            return of(AuthApiActions.logoutFailure());
+            return EMPTY;
           })
         )
       )
