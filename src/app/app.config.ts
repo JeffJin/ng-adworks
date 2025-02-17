@@ -3,6 +3,7 @@ import { ApplicationConfig, provideZoneChangeDetection, isDevMode } from '@angul
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
+import { routerReducer } from '@ngrx/router-store';
 import { provideState, provideStore } from '@ngrx/store';
 
 import { routes } from './app.routes';
@@ -20,7 +21,7 @@ import { VideoEffects } from './store/effects/video.effects';
 import { authMetaReducer } from './store/reducers/meta.reducers';
 import { authReducer, authKey } from './store/reducers/auth.reducers';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-// import { provideRouterStore } from '@ngrx/router-store';
+import { provideRouterStore } from '@ngrx/router-store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -51,7 +52,10 @@ export const appConfig: ApplicationConfig = {
       withI18nSupport(),
       withIncrementalHydration()
     ),
-    provideStore(),
+    provideStore({
+      router: routerReducer,
+    }),
+    provideRouterStore(),
     provideState(authKey, authReducer, { metaReducers: [authMetaReducer] }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideEffects([
