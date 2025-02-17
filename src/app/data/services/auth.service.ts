@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { AUTH_STORAGE_KEY } from '../../store/app.tokens';
 import { StorageService } from './storage.service';
 import { Router } from '@angular/router';
 import { mockData } from './mock-data';
@@ -12,8 +13,9 @@ import { mockData } from './mock-data';
   }
 )
 export class AuthService {
-
-  constructor(private http: HttpClient, private router: Router, private cacheService: StorageService) {
+  constructor(private http: HttpClient,
+              @Inject(AUTH_STORAGE_KEY) private authStorageKey: string,
+              private cacheService: StorageService) {
   }
 
   isEmailTaken(email: string): Observable<boolean> {
@@ -97,7 +99,7 @@ export class AuthService {
     return this.http.post(environment.apiBaseUrl + '/account/logout', null).pipe(tap({
       next: (data: any) => {
         // store the result into local storage
-        this.cacheService.setToken('');
+        this.cacheService.remove(this.authStorageKey);
         this.cacheService.setXsrfToken(null);
         return data;
       },

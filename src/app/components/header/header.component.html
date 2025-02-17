@@ -18,7 +18,11 @@
       <a routerLink="latest" class="text-sm/6 font-semibold text-gray-900">Latest</a>
       <a routerLink="about" class="text-sm/6 font-semibold text-gray-900">Company</a>
       <a routerLink="register" class="text-sm/6 font-semibold text-gray-900">Register</a>
-      <a routerLink="login" class="text-sm/6 font-semibold text-gray-900">Log in <span aria-hidden="true">&rarr;</span></a>
+      @if(isLoggedIn()) {
+        <a href="javascript:void(0)" (click)="logout()" class="text-sm/6 font-semibold text-gray-900">Log Out <span aria-hidden="true">&rarr;</span></a>
+      } @else {
+        <a routerLink="login" class="text-sm/6 font-semibold text-gray-900">Log in <span aria-hidden="true">&rarr;</span></a>
+      }
     </div>
   </nav>
   <!-- Mobile menu, show/hide based on menu open state. -->
@@ -44,17 +48,17 @@
         <div class="mt-6 flow-root">
           <div class="-my-6 divide-y divide-gray-500/10">
             <div class="space-y-2 py-6">
-              <a routerLink="blog" (click)="isOpen.set(false)"
+              <a routerLink="blog"
                  class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Product</a>
-              <a routerLink="latest" (click)="isOpen.set(false)"
+              <a routerLink="latest"
                  class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Latest</a>
-              <a routerLink="about" (click)="isOpen.set(false)"
+              <a routerLink="about"
                  class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Company</a>
               @if(isLoggedIn()) {
-                <a routerLink="dashboard" (click)="isOpen.set(false)"
+                <a routerLink="dashboard"
                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Dashboard</a>
               } @else {
-                <a routerLink="register" (click)="isOpen.set(false)"
+                <a routerLink="register"
                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Register</a>
               }
 
@@ -76,9 +80,6 @@
         </div>
       </div>
     }
-<!--    @else {-->
-<!--      -->
-<!--    }-->
   </div>
 </header>
 

@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { NgClass } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { NgClass, NgStyle } from '@angular/common';
+import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, tap } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { filter, tap } from 'rxjs';
   imports: [
     RouterLink,
     RouterLinkActive,
-    NgClass
+    NgStyle
   ],
   animations: [
     trigger('openCloseProfile', [
@@ -27,6 +27,7 @@ import { filter, tap } from 'rxjs';
           transform: 'scale(0.95, 0.95)'
         }),
       ),
+      transition(':leave', [ animate('100ms ease-in') ]),
       transition('open-profile => closed-profile', [ animate('100ms ease-in') ]),
       transition('closed-profile => open-profile', [ animate('75ms ease-out') ]),
     ]),
@@ -43,6 +44,7 @@ import { filter, tap } from 'rxjs';
           opacity: 0,
         }),
       ),
+      transition(':leave', [ animate('300ms') ]),
       transition('open-sidebar => closed-sidebar', [ animate('300ms') ]),
       transition('closed-sidebar => open-sidebar', [ animate('300ms') ]),
     ]),
@@ -59,8 +61,18 @@ import { filter, tap } from 'rxjs';
           transform: 'translateX(-100%)'
         }),
       ),
-      transition('open-sidebar-slider => closed-sidebar-slider', [ animate('300ms ease-in-out') ]),
-      transition('closed-sidebar-slider => open-sidebar-slider', [ animate('300ms ease-in-out') ]),
+      transition(
+        ':leave',
+        [ animate('300ms ease-in-out') ]
+      ),
+      transition(
+        'open-sidebar-slider => closed-sidebar-slider',
+        [ animate('300ms ease-in-out') ]
+      ),
+      transition(
+        'closed-sidebar-slider => open-sidebar-slider',
+        [ animate('300ms ease-in-out') ]
+      ),
     ])
   ],
   templateUrl: './side-nav.component.html',
@@ -68,7 +80,10 @@ import { filter, tap } from 'rxjs';
 })
 export class SideNavComponent implements OnInit {
   protected isSidebarClosed = signal(true);
+  protected hideMobileSidebar: boolean = true;
+
   private navigationEnd$;
+  private isNotificationOpen: boolean = false;
 
   constructor(private router: Router) {
     this.navigationEnd$ = this.router.events.pipe(
@@ -89,7 +104,7 @@ export class SideNavComponent implements OnInit {
     return this.isSidebarClosed() ? 'closed-sidebar' : 'open-sidebar';
   }
 
-  toggleSidebarMenu() {
+  toggleSidebarMenu($event: MouseEvent) {
     this.isSidebarClosed.update((val) => !val);
   }
 
@@ -98,7 +113,36 @@ export class SideNavComponent implements OnInit {
     return this.isProfileMenuOpen ? 'open-profile' : 'closed-profile';
   }
 
-  toggleProfileMenu() {
+  toggleProfileMenu($event:MouseEvent) {
+    $event.stopPropagation();
+    console.log('toggle profile menu');
     this.isProfileMenuOpen = !this.isProfileMenuOpen;
+  }
+
+  toggleNotifications($event:MouseEvent) {
+    console.log('toggle notifications');
+    $event.stopPropagation();
+    this.isNotificationOpen = !this.isNotificationOpen;
+  }
+
+  onSidebarAnimationDone($event: any) {
+    console.log('onSidebarAnimationDone', $event);
+    if ($event.toState === 'closed-sidebar') {
+      this.hideMobileSidebar = true;
+    }
+  }
+
+  onSidebarAnimationStart($event: any) {
+    console.log('onSidebarAnimationDone', $event);
+    if ($event.toState === 'open-sidebar') {
+      this.hideMobileSidebar = false;
+    }
+  }
+
+  @HostListener('click', ['$event.target'])
+  onClick(element: HTMLElement) {
+    console.log('element', element);
+    this.isProfileMenuOpen = false;
+    this.isNotificationOpen = false;
   }
 }

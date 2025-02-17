@@ -38,8 +38,8 @@ export class AuthEffects {
       ofType(AuthApiActions.logout),
       exhaustMap(action =>
         this.authService.logout().pipe(
-          map(user => {
-            return AuthApiActions.loginSuccess({ user });
+          map((result) => {
+            return AuthApiActions.logoutSuccess();
           }),
           catchError((error) => {
             console.error(error);
