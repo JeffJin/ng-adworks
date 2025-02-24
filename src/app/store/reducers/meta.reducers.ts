@@ -9,7 +9,6 @@ import {
 import { merge, pick } from 'lodash-es';
 import { environment } from '../../../environments/environment';
 import { StorageService } from '../../data/services/storage.service';
-import { AppState } from '../app.state';
 import { AUTH_SAVED_KEYS, AUTH_STORAGE_KEY } from '../app.tokens';
 
 function loggerMetaReducer(reducer: ActionReducer<any>): ActionReducer<any> {
@@ -46,7 +45,7 @@ export function authMetaReducer(reducer: ActionReducer<any>): ActionReducer<any>
       }
       // save the next state to the application storage.
       const stateToSave = pick(nextState, stateKeys);
-      console.log('authMetaReducer:: save states into local storage');
+      // console.log('authMetaReducer:: save states into local storage');
       storageService.setSavedState(stateToSave, storageKey);
     }
     return nextState;

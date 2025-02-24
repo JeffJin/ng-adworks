@@ -41,34 +41,18 @@ export function authInterceptor(request: HttpRequest<unknown>, next: HttpHandler
   const router = inject(Router);
 
   const token = cacheSvc.getToken();
-  const headers = {
-    Authorization: ''
-  };
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  if(!request.url.includes('ag-grid.com')) {
+    const headers = {
+      Authorization: ''
+    };
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    request = request.clone({
+      setHeaders: headers
+    });
   }
-  request = request.clone({
-    setHeaders: headers
-  });
-
-  const updateUpdatedBy = (request: HttpRequest<IEntity>): void => {
-    if (request.body) {
-      request.body.createdBy = request.body.createdBy || '';
-      request.body.updatedBy = cacheSvc.getUser() ? cacheSvc.getUser().email : '';
-      request.body.createdOn = null;
-      request.body.updatedOn = new Date();
-    }
-  };
-
-  const updateCreatedBy = (request: HttpRequest<IEntity>): void => {
-    if (request.body) {
-      request.body.createdBy = cacheSvc.getUser() ? cacheSvc.getUser().email : '';
-      request.body.updatedBy = '';
-      request.body.updatedOn = null;
-      request.body.createdOn = new Date();
-    }
-  };
-
 
   return next(request).pipe(
     catchError((err: HttpErrorResponse) => {

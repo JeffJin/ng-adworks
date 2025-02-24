@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-overview',
-  imports: [],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss'
 })
-export class OverviewComponent {
+export class OverviewComponent implements AfterViewInit {
+  constructor(private store: Store) {
 
-  async loadDevices() {
-    const { DevicesComponent } = await import('../devices/devices.component');
+  }
+
+  ngAfterViewInit() {
 
   }
 }

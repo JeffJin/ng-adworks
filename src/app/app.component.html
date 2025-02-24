@@ -1,6 +1,8 @@
-@if(showHeader()) {
+@if(showHeaderFooter()) {
   <app-header></app-header>
 }
 <router-outlet (activate)="verifyHeader()" />
-<app-footer></app-footer>
+@if(showHeaderFooter()) {
+  <app-footer></app-footer>
+}
 

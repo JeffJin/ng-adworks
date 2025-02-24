@@ -1,4 +1,9 @@
 <app-side-nav>
-  <router-outlet></router-outlet>
+  <div ngProjectAs="content-header">
+    <app-dashboard-toolbar></app-dashboard-toolbar>
+  </div>
+  <div ngProjectAs="content-body">
+    <router-outlet></router-outlet>
+  </div>
 </app-side-nav>
 

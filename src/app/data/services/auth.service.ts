@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders, HttpRequest, HttpResponse } from '@angular/com
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AUTH_STORAGE_KEY } from '../../store/app.tokens';
+import { IUser } from '../models/dtos';
 import { StorageService } from './storage.service';
 import { Router } from '@angular/router';
 import { mockData } from './mock-data';
@@ -28,9 +29,9 @@ export class AuthService {
     }));
   }
 
-  login(email: string, password: string): Observable<any> {
+  login(email: string, password: string): Observable<IUser> {
     const dto = { email, password };
-    return this.http.post(
+    return this.http.post<IUser>(
       `${environment.apiBaseUrl}/account/login`,
       dto,
       { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
@@ -58,7 +59,7 @@ export class AuthService {
         observer.next(mockData.user);
         observer.complete();
       } else {
-        this.http.get(environment.apiBaseUrl + '/user')
+        this.http.get(environment.apiBaseUrl + '/users/current')
           .pipe(tap({
             next: (data: any) => {
               this.cacheService.setUser(data);

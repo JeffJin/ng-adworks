@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   user: Signal<IUser | null |undefined>;
   isLoggedIn$: Observable<boolean>;
   isLoggedIn: Signal<boolean|undefined>;
-  showHeader = signal<boolean>(false);
+  showHeaderFooter = signal<boolean>(false);
 
   constructor(private router: Router,
               private store: Store,
@@ -47,9 +47,9 @@ export class AppComponent implements OnInit {
 
   verifyHeader() {
     if(this.router.url.startsWith('/dashboard')) {
-      this.showHeader.set(false);
+      this.showHeaderFooter.set(false);
     } else {
-      this.showHeader.set(true);
+      this.showHeaderFooter.set(true);
     }
   }
 }

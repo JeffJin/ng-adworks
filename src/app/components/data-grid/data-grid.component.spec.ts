@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RepotsComponent } from './repots.component';
+import { DataGridComponent } from './data-grid.component';
 
-describe('RepotsComponent', () => {
-  let component: RepotsComponent;
-  let fixture: ComponentFixture<RepotsComponent>;
+describe('DataGridComponent', () => {
+  let component: DataGridComponent;
+  let fixture: ComponentFixture<DataGridComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RepotsComponent]
+      imports: [DataGridComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RepotsComponent);
+    fixture = TestBed.createComponent(DataGridComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

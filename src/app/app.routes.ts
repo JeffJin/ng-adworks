@@ -5,11 +5,11 @@ import { authGuard } from './guards/auth.guard';
 import { AboutComponent } from './pages/about/about.component';
 import { BlogComponent } from './pages/blog/blog.component';
 import { ConfirmEmailComponent } from './pages/confirm-email/confirm-email.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DocumentsComponent } from './pages/dashboard/documents/documents.component';
+import { HistoryComponent } from './pages/dashboard/history/history.component';
 import { ImagesComponent } from './pages/dashboard/images/images.component';
 import { OverviewComponent } from './pages/dashboard/overview/overview.component';
-import { RepotsComponent } from './pages/dashboard/repots/repots.component';
+import { ReportsComponent } from './pages/dashboard/reports/reports.component';
 import { VideosComponent } from './pages/dashboard/videos/videos.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { LatestComponent } from './pages/latest/latest.component';
@@ -18,6 +18,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { assetsKey, assetsReducer } from './store/reducers/assets.reducers';
+import { dashboardKey, dashboardReducer } from './store/reducers/dashboard.reducers';
 import { loginFormKey, loginFormReducer } from './store/reducers/login-form.reducers';
 
 export const routes: Routes = [
@@ -46,7 +47,7 @@ export const routes: Routes = [
       .then(c => c.DashboardComponent),
     providers: [
       provideState({ name: assetsKey, reducer: assetsReducer }),
-
+      provideState({ name: dashboardKey, reducer: dashboardReducer }),
     ],
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -54,7 +55,8 @@ export const routes: Routes = [
       { path: 'videos', component: VideosComponent },
       { path: 'images', component: ImagesComponent },
       { path: 'documents', component: DocumentsComponent },
-      { path: 'reports', component: RepotsComponent },
+      { path: 'history', component: HistoryComponent },
+      { path: 'reports', component: ReportsComponent },
     ],
     canActivate: [ authGuard ],
   }, {

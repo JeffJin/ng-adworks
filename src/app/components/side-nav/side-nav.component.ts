@@ -1,11 +1,14 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { NgStyle } from '@angular/common';
-import { Component, HostListener, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, effect, HostListener, OnDestroy, OnInit, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { filter, Subscription, tap } from 'rxjs';
-import { AuthApiActions } from '../../store/actions/auth.actions';
-import { selectUser } from '../../store/app.selectors';
+import { DashboardActions } from '../../store/actions/dashboard-actions';
+import {
+  selectDashboardSideMenuHidden,
+  selectUser
+} from '../../store/app.selectors';
 
 @Component({
   selector: 'app-side-nav',
@@ -15,26 +18,8 @@ import { selectUser } from '../../store/app.selectors';
     NgStyle
   ],
   animations: [
-    trigger('openCloseProfile', [
-      state(
-        'open-profile',
-        style({
-          opacity: 1,
-          transform: 'scale(1, 1)'
-        }),
-      ),
-      state(
-        'closed-profile',
-        style({
-          opacity: 0,
-          transform: 'scale(0.95, 0.95)'
-        }),
-      ),
-      transition(':leave', [ animate('100ms ease-in') ]),
-      transition('open-profile => closed-profile', [ animate('100ms ease-in') ]),
-      transition('closed-profile => open-profile', [ animate('75ms ease-out') ]),
-    ]),
     trigger('openCloseSidebar', [
+      state('*', style({ opacity: 0 })),
       state(
         'open-sidebar',
         style({
@@ -82,27 +67,27 @@ import { selectUser } from '../../store/app.selectors';
   styleUrl: './side-nav.component.scss'
 })
 export class SideNavComponent implements OnInit, OnDestroy {
-  protected isSidebarClosed = signal(true);
-  protected hideMobileSidebar: boolean = true;
+  protected isSidebarClosed;
   protected user;
   private navigationEnd$;
-  private isNotificationOpen: boolean = false;
   private unsubscribeNavigationEnd: Subscription | null = null;
 
   constructor(private store: Store, private router: Router) {
     this.user = this.store.selectSignal(selectUser);
+    this.isSidebarClosed = this.store.selectSignal(selectDashboardSideMenuHidden);
     this.navigationEnd$ = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
-      tap(() => (this.isSidebarClosed.set(true)))
+      tap(() => (this.store.dispatch(DashboardActions.showDashboardSideMenu({ show: false }))))
     );
   }
 
+
   ngOnInit() {
-    this. unsubscribeNavigationEnd = this.navigationEnd$.subscribe();
+    this.unsubscribeNavigationEnd = this.navigationEnd$.subscribe();
   }
 
   ngOnDestroy() {
-    if(this.unsubscribeNavigationEnd) {
+    if (this.unsubscribeNavigationEnd) {
       this.unsubscribeNavigationEnd.unsubscribe();
     }
   }
@@ -115,44 +100,22 @@ export class SideNavComponent implements OnInit, OnDestroy {
     return this.isSidebarClosed() ? 'closed-sidebar' : 'open-sidebar';
   }
 
-  toggleSidebarMenu($event: MouseEvent) {
-    this.isSidebarClosed.update((val) => !val);
-  }
-
-  isProfileMenuOpen = false
-  get openCloseProfileMenu(): string {
-    return this.isProfileMenuOpen ? 'open-profile' : 'closed-profile';
-  }
-
-  toggleProfileMenu($event:MouseEvent) {
-    $event.stopPropagation();
-    this.isProfileMenuOpen = !this.isProfileMenuOpen;
-  }
-
-  toggleNotifications($event:MouseEvent) {
-    $event.stopPropagation();
-    this.isNotificationOpen = !this.isNotificationOpen;
+  closeSideMenu() {
+    console.log('side nav showDashboardSideMenu');
+    this.store.dispatch(DashboardActions.showDashboardSideMenu({ show: false }));
   }
 
   onSidebarAnimationDone($event: any) {
     if ($event.toState === 'closed-sidebar') {
-      this.hideMobileSidebar = true;
+      console.log('onSidebarAnimationDone', 'closed-sidebar');
+      this.store.dispatch(DashboardActions.showDashboardSideMenu({ show: false }));
     }
   }
 
   onSidebarAnimationStart($event: any) {
     if ($event.toState === 'open-sidebar') {
-      this.hideMobileSidebar = false;
+      console.log('onSidebarAnimationStart', 'open-sidebar');
+      this.store.dispatch(DashboardActions.showDashboardSideMenu({ show: true }));
     }
-  }
-
-  @HostListener('click', ['$event.target'])
-  onClick(element: HTMLElement) {
-    this.isProfileMenuOpen = false;
-    this.isNotificationOpen = false;
-  }
-
-  logout() {
-    this.store.dispatch(AuthApiActions.logout());
   }
 }
