@@ -107,6 +107,7 @@ export interface IImage extends IEntity {
   tags?: string;
   width?: number;
   height?: number;
+  assetType?: string;
 }
 
 export const VideoType = {
