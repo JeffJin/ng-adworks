@@ -11,9 +11,9 @@ import { Store } from '@ngrx/store';
 import { EMPTY, Observable, tap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthApiActions } from '../../store/actions/auth.actions';
-import { IEntity } from '../models/dtos';
 import { StorageService } from './storage.service';
 import { NavigationExtras, Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 export const CACHING_ENABLED = new HttpContextToken<boolean>(() => false);
 
@@ -41,18 +41,21 @@ export function authInterceptor(request: HttpRequest<unknown>, next: HttpHandler
   const router = inject(Router);
 
   const token = cacheSvc.getToken();
-  if(!request.url.includes('ag-grid.com')) {
-    const headers = {
-      Authorization: ''
-    };
+  const headers: any = {};
 
+  if(!request.url.includes('ag-grid.com')) {
     if (token) {
       headers.Authorization = `Bearer ${token}`;
     }
-    request = request.clone({
-      setHeaders: headers
-    });
   }
+
+  if(request.url.endsWith('amazonaws.com/graphql')) {
+    headers['x-api-key'] = `${environment.awsApiKey}`;
+  }
+
+  request = request.clone({
+    setHeaders: headers
+  });
 
   return next(request).pipe(
     catchError((err: HttpErrorResponse) => {

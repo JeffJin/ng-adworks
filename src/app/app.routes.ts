@@ -10,6 +10,7 @@ import { HistoryComponent } from './pages/dashboard/history/history.component';
 import { ImagesComponent } from './pages/dashboard/images/images.component';
 import { OverviewComponent } from './pages/dashboard/overview/overview.component';
 import { ReportsComponent } from './pages/dashboard/reports/reports.component';
+import { UsersComponent } from './pages/dashboard/users/users.component';
 import { VideosComponent } from './pages/dashboard/videos/videos.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { LatestComponent } from './pages/latest/latest.component';
@@ -57,6 +58,7 @@ export const routes: Routes = [
       { path: 'documents', component: DocumentsComponent },
       { path: 'history', component: HistoryComponent },
       { path: 'reports', component: ReportsComponent },
+      { path: 'users', component: UsersComponent },
     ],
     canActivate: [ authGuard ],
   }, {
