@@ -37,9 +37,9 @@ import {
 export class LoginComponent implements OnInit {
   protected readonly LoginFormStatus = LoginFormStatus;
   protected loginForm: FormGroup;
-  private emailControl: FormControl;
-  private pwdControl: FormControl;
-  private rememberMeControl: FormControl;
+  emailControl: FormControl;
+  pwdControl: FormControl;
+  rememberMeControl: FormControl;
   private user$;
   protected formStatus$;
   protected formStatus;
@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit {
     );
     //analytics effect
     effect(() => {
-      console.log(`form state updated, password valid: ${this.password()}, email valid: ${this.email()}`);
+      console.log(`form state updated, email valid: ${this.email()}`);
     });
 
     //this happens after SSR on client side
@@ -87,15 +87,12 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.emailControl?.valueChanges.subscribe((val => {
-      console.log('email value changed', val);
       this.store.dispatch(LoginFormActions.updateEmail({ payload: val }));
     }));
     this.pwdControl?.valueChanges.subscribe((val => {
-      console.log('password value changed', val);
       this.store.dispatch(LoginFormActions.updatePassword({ payload: val }));
     }));
     this.rememberMeControl?.valueChanges.subscribe((val => {
-      console.log('rememberMe value changed', val);
       this.store.dispatch(LoginFormActions.updateRememberMe({ payload: val }));
     }));
 
@@ -126,5 +123,10 @@ export class LoginComponent implements OnInit {
     const password = this.pwdControl.value;
     this.store.dispatch(AuthApiActions.login({ email, password }));
     this.store.dispatch(LoginFormActions.submitForm());
+  }
+
+  clearErrors() {
+    this.store.dispatch(LoginFormActions.resetLoginForm());
+    this.loginForm.reset();
   }
 }

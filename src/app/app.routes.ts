@@ -61,8 +61,7 @@ export const routes: Routes = [
       { path: 'users', component: UsersComponent },
     ],
     canActivate: [ authGuard ],
-  }, {
-    path: '**', component: NotFoundComponent
   },
+  { path: '**', component: NotFoundComponent },
 
 ];

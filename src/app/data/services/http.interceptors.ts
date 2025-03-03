@@ -20,7 +20,7 @@ export const CACHING_ENABLED = new HttpContextToken<boolean>(() => false);
 export function loggingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   return next(req).pipe(tap(event => {
     if (event.type === HttpEventType.Response) {
-      console.log(req.url, 'returned a response with status', event.status);
+      // console.log(req.url, 'returned a response with status', event.status);
     }
   }));
 }
@@ -67,8 +67,6 @@ export function authInterceptor(request: HttpRequest<unknown>, next: HttpHandler
             store.dispatch(AuthApiActions.logout());
             break;
           case 500:
-            const navigationExtras: NavigationExtras = { state: { error: err.error } };
-            router.navigateByUrl('/error', navigationExtras);
             break;
           default:
             break;

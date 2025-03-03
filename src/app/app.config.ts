@@ -1,4 +1,4 @@
-import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig, provideZoneChangeDetection, isDevMode } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
@@ -35,6 +35,7 @@ export const appConfig: ApplicationConfig = {
     },
     provideAnimationsAsync(),
     provideHttpClient(
+      withFetch(),
       withInterceptors([
         authInterceptor,
         loggingInterceptor,

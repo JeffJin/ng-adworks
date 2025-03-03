@@ -20,12 +20,10 @@ export class AuthService {
   }
 
   isEmailTaken(email: string): Observable<boolean> {
-    return this.http.post(
-      `${environment.apiBaseUrl}/users/validate_email`,
-      email,
-      { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+    return this.http.get(
+      `${environment.apiBaseUrl}/users/validate_email?email=${email}`,
     ).pipe(map((response: any) => {
-      return response['DuplicatedEmail'] == 'true';
+      return response['duplicatedEmail'] === true;
     }));
   }
 
@@ -38,7 +36,7 @@ export class AuthService {
     );
   }
 
-  register(userName: string, email: string, password: string, confirmPassword: string): Observable<any> {
+  register(email: string, password: string, confirmPassword: string): Observable<any> {
     if (password !== confirmPassword) {
       return new Observable(obs => {
         obs.next({ message: 'Passwords do not match', code: 'PasswordsNotMatch' });
@@ -46,7 +44,6 @@ export class AuthService {
       });
     }
     const formData: FormData = new FormData();
-    formData.append('userName', userName);
     formData.append('email', email);
     formData.append('confirmPassword', confirmPassword);
     formData.append('password', password);
@@ -110,5 +107,9 @@ export class AuthService {
         return err;
       }
     }));
+  }
+
+  resendVerification(email: string) {
+    return this.http.post(environment.apiBaseUrl + '/account/send_verification_email', {email})
   }
 }

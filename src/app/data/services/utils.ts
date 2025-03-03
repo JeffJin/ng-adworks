@@ -1,9 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-@Injectable()
 export class Utils {
 
-  getParameterByName(name: string, url: string = null) {
+  static getParameterByName(name: string, url: string = '') {
     if (!url) {
       url = window.location.href;
     }
@@ -19,12 +18,12 @@ export class Utils {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
 
-  getExtension(filename) {
+  static getExtension(filename: string) {
     const parts = filename.split('.');
     return parts[parts.length - 1];
   }
 
-  isImage(filename) {
+  static isImage(filename: string) {
     const ext = this.getExtension(filename);
     switch (ext.toLowerCase()) {
       case 'jpg':
@@ -36,7 +35,7 @@ export class Utils {
     return false;
   }
 
-  isAudio(filename) {
+  static  isAudio(filename: string) {
     const ext = this.getExtension(filename);
     switch (ext.toLowerCase()) {
       case 'mp3':
@@ -47,7 +46,7 @@ export class Utils {
     return false;
   }
 
-  isVideo(filename) {
+  static isVideo(filename: string) {
     const ext = this.getExtension(filename);
     switch (ext.toLowerCase()) {
       case 'm4v':
@@ -58,5 +57,17 @@ export class Utils {
         // etc
         return true;
     }
+    return false;
   }
+
+  static isValidEmail(email: string) {
+    return EmailRegx.test(email);
+  }
+
 }
+
+export const StrongPasswordRegx: RegExp =
+  /^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/;
+
+export const EmailRegx: RegExp =
+  /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;

@@ -16,8 +16,6 @@ import { selectIsLoggedIn, selectUser } from './store/app.selectors';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  user: Signal<IUser | null |undefined>;
-  isLoggedIn$: Observable<boolean>;
   isLoggedIn: Signal<boolean|undefined>;
   showHeaderFooter = signal<boolean>(false);
 
@@ -25,9 +23,7 @@ export class AppComponent implements OnInit {
               private store: Store,
               private title: Title,
               private meta: Meta){
-    this.user = this.store.selectSignal(selectUser);
-    this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
-    this.isLoggedIn = toSignal(this.isLoggedIn$);
+    this.isLoggedIn = this.store.selectSignal(selectIsLoggedIn);
     afterNextRender(() => {
       // Safe to check `scrollHeight` because this will only run in the browser, not the server.
     });
@@ -38,11 +34,6 @@ export class AppComponent implements OnInit {
     this.meta.updateTag({
       'description': 'Adworks Main Page'
     });
-    this.isLoggedIn$.subscribe((isLoggedIn) => {
-      if(!isLoggedIn){
-        this.router.navigate(['/login']);
-      }
-    })
   }
 
   verifyHeader() {
