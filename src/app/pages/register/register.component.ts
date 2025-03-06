@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { JsonPipe, NgClass } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../data/services/auth.service';
@@ -41,7 +41,13 @@ enum RegisterFormStatus {
     ])
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrl: './register.component.scss',
+  host: {
+    '[attr.role]': 'role()',
+    '[class.bright]': 'isBrightTheme()',
+    '[class.dark]': 'isDarkTheme()',
+    '(click)': 'onBodyClick($event)'
+  }
 })
 export class RegisterComponent implements OnInit {
   readonly RegisterFormStatus = RegisterFormStatus;
@@ -49,8 +55,12 @@ export class RegisterComponent implements OnInit {
   emailControl: FormControl;
   pwdControl: FormControl;
   confirmPwdControl: FormControl;
+  errors: { code: string, description: string }[] = [];
 
   protected formStatus = RegisterFormStatus.Idle;
+  role = signal<string>('adin');
+  isBrightTheme = signal<boolean>(false);
+  isDarkTheme = signal<boolean>(true);
 
   constructor(private fb: FormBuilder,
               private emailValidator: UniqueEmailValidator,
@@ -90,7 +100,9 @@ export class RegisterComponent implements OnInit {
     }));
   }
 
-  errors: { code: string, description: string }[] = [];
+  getRole(): string {
+    return 'admin';
+  }
 
   register(): void {
     const email = this.emailControl.value;
@@ -121,5 +133,13 @@ export class RegisterComponent implements OnInit {
 
   resendEmail(email: string) {
     this.authService.resendVerification(email);
+  }
+
+  getTheme() {
+    return 'summer';
+  }
+
+  onBodyClick($event: MouseEvent) {
+    console.log($event);
   }
 }

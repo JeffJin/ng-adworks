@@ -22,6 +22,7 @@ export class AuthService {
   isEmailTaken(email: string): Observable<boolean> {
     return this.http.get(
       `${environment.apiBaseUrl}/users/validate_email?email=${email}`,
+      { observe: 'response' } //full response data
     ).pipe(map((response: any) => {
       return response['duplicatedEmail'] === true;
     }));
@@ -110,6 +111,6 @@ export class AuthService {
   }
 
   resendVerification(email: string) {
-    return this.http.post(environment.apiBaseUrl + '/account/send_verification_email', {email})
+    return this.http.post(environment.apiBaseUrl + '/account/send_verification_email', { email });
   }
 }

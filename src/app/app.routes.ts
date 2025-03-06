@@ -1,17 +1,10 @@
 import { provideRouter, Routes } from '@angular/router';
 import { provideState } from '@ngrx/store';
-import { ErrorComponent } from './error/error.component';
+import { ErrorComponent } from './pages/error/error.component';
 import { authGuard } from './guards/auth.guard';
 import { AboutComponent } from './pages/about/about.component';
 import { BlogComponent } from './pages/blog/blog.component';
 import { ConfirmEmailComponent } from './pages/confirm-email/confirm-email.component';
-import { DocumentsComponent } from './pages/dashboard/documents/documents.component';
-import { HistoryComponent } from './pages/dashboard/history/history.component';
-import { ImagesComponent } from './pages/dashboard/images/images.component';
-import { OverviewComponent } from './pages/dashboard/overview/overview.component';
-import { ReportsComponent } from './pages/dashboard/reports/reports.component';
-import { UsersComponent } from './pages/dashboard/users/users.component';
-import { VideosComponent } from './pages/dashboard/videos/videos.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { LatestComponent } from './pages/latest/latest.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -52,13 +45,34 @@ export const routes: Routes = [
     ],
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: OverviewComponent },
-      { path: 'videos', component: VideosComponent },
-      { path: 'images', component: ImagesComponent },
-      { path: 'documents', component: DocumentsComponent },
-      { path: 'history', component: HistoryComponent },
-      { path: 'reports', component: ReportsComponent },
-      { path: 'users', component: UsersComponent },
+      {
+        path: 'overview',
+        loadComponent: () => import('./pages/dashboard/overview/overview.component').then(c => c.OverviewComponent),
+      },
+      {
+        path: 'videos',
+        loadComponent: () => import('./pages/dashboard/videos/videos.component').then(c => c.VideosComponent),
+      },
+      {
+        path: 'images',
+        loadComponent: () => import('./pages/dashboard/images/images.component').then(c => c.ImagesComponent),
+      },
+      {
+        path: 'documents',
+        loadComponent: () => import('./pages/dashboard/documents/documents.component').then(c => c.DocumentsComponent),
+      },
+      {
+        path: 'history',
+        loadComponent: () => import('./pages/dashboard/history/history.component').then(c => c.HistoryComponent),
+      },
+      {
+        path: 'reports',
+        loadComponent: () => import('./pages/dashboard/reports/reports.component').then(c => c.ReportsComponent),
+      },
+      {
+        path: 'users',
+        loadComponent: () => import('./pages/dashboard/users/users.component').then(c => c.UsersComponent),
+      },
     ],
     canActivate: [ authGuard ],
   },
