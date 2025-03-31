@@ -39,13 +39,14 @@ export function authMetaReducer(reducer: ActionReducer<any>): ActionReducer<any>
       // init the application state.
       if (onInit) {
         onInit = false;
-        console.log('authMetaReducer:: restore states from local storage');
         const savedState = storageService.getSavedState(storageKey);
+        console.log('authMetaReducer:: restore states from local storage', savedState);
         return merge(nextState, savedState);
       }
       // save the next state to the application storage.
+      //pick 'user' property from next state
       const stateToSave = pick(nextState, stateKeys);
-      // console.log('authMetaReducer:: save states into local storage');
+      // console.log('authMetaReducer:: save states into local storage', stateKeys, stateToSave);
       storageService.setSavedState(stateToSave, storageKey);
     }
     return nextState;

@@ -10,6 +10,8 @@ export const initialState: AssetState = {
   images: [],
   videos: [],
   audios: [],
+  currentVideo: null,
+  currentImage: null,
 };
 
 export const assetsReducer = createImmerReducer(
@@ -17,11 +19,17 @@ export const assetsReducer = createImmerReducer(
   on(VideoActions.loadVideosSuccess, (state, { videos }) =>
     ({ ...state, videos })
   ),
+  on(VideoActions.loadVideoDetailsSuccess, (state, { video }) =>
+    ({ ...state, currentVideo: video })
+  ),
   on(AudioActions.loadAudiosSuccess, (state, { audios }) =>
     ({ ...state, audios })
   ),
   on(ImageActions.loadImagesSuccess, (state, { images }) =>
     ({ ...state, images })
+  ),
+  on(ImageActions.loadImageDetailsSuccess, (state, { image }) =>
+    ({ ...state, currentImage: image })
   ),
   on(ImageActions.addImageSuccess, (state, { image }) => {
     if (state.images.find((i: IImage) => i.id === image.id)) {
@@ -30,9 +38,14 @@ export const assetsReducer = createImmerReducer(
     return { ...state, images: [ ...state.images, image ] };
   }),
   immerOn(ImageActions.updateImageSizeSuccess, (state, { image }) => {
+    if(state.currentImage && state.currentImage.id === image.id) {
+      state.currentImage.width = image.width;
+      state.currentImage.height = image.height;
+    }
     const index = state.images.findIndex(img => img.id == image.id);
     state.images[index].width = image.width;
     state.images[index].height = image.height;
+
   }),
   immerOn(ImageActions.updateImageSuccess, (state, { image }) => {
     const index = state.images.findIndex(img => img.id == image.id);

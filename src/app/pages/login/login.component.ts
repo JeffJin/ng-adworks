@@ -108,10 +108,10 @@ export class LoginComponent implements OnInit {
       }
     });
 
-    this.user$?.subscribe((user) => {
+    this.user$?.subscribe(async (user) => {
       if (user && user.userName && user.token) {
         this.store.dispatch(LoginFormActions.resetLoginForm());
-        this.router.navigateByUrl('dashboard');
+        await this.router.navigateByUrl('dashboard');
       } else {
         throwError(() => new Error('Invalid login credentials'));
       }

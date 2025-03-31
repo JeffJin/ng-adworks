@@ -5,6 +5,7 @@ import { assetsKey } from './reducers/assets.reducers';
 import { authKey } from './reducers/auth.reducers';
 import { dashboardKey, DashboardState } from './reducers/dashboard.reducers';
 import { loginFormKey } from './reducers/login-form.reducers';
+import { IVideo } from '../data/models/dtos';
 
 export const selectAuth =  createFeatureSelector<AuthState>(authKey);
 
@@ -25,9 +26,19 @@ export const selectImages = createSelector(
   (state: AssetState) => state.images,
 );
 
+export const selectCurrentImage =  createSelector(
+  selectAssets,
+  (state: AssetState) => state.currentImage,
+);
+
 export const selectVideos =  createSelector(
   selectAssets,
   (state: AssetState) => state.videos,
+);
+
+export const selectCurrentVideo =  createSelector(
+  selectAssets,
+  (state: AssetState) => state.currentVideo,
 );
 
 export const selectAudios =  createSelector(

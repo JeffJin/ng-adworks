@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { IImage } from '../../data/models/dtos';
 import { ImageService } from '../../data/services/image.service';
 import { mergeMap, map, catchError } from 'rxjs/operators';
-import { ImageActions } from '../actions/assets.actions';
+import { ImageActions, VideoActions } from '../actions/assets.actions';
 
 @Injectable()
 export class ImageEffects {
@@ -14,8 +14,9 @@ export class ImageEffects {
   loadImages$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ImageActions.loadImages),
-      mergeMap(() => this.imageService.getImages()
-        .pipe(map(images => {
+      mergeMap(() =>
+        this.imageService.getImages().pipe(
+          map(images => {
             const results = images.map((img: IImage) => {
               return img;
             });
@@ -27,16 +28,30 @@ export class ImageEffects {
     )
   );
 
+  loadImageDetails$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ImageActions.loadImageDetails),
+      mergeMap((action: { imageId: string }) =>
+        this.imageService.getImage(action.imageId)
+          .pipe(
+            map(image => {
+              image.assetType = 'Image';
+              return ImageActions.loadImageDetailsSuccess({ image });
+            }),
+            catchError((error) => of(ImageActions.loadImageDetailsFailure({ error })))
+          )
+      )
+    )
+  );
+
   updateImageSize$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ImageActions.updateImageSize),
       mergeMap((action) =>
-        this.imageService.updateImageSize(action.image)
-          .pipe(map(image => {
-              return ImageActions.updateImageSizeSuccess({ image });
-            }),
-            catchError((error) => of(ImageActions.updateImageSizeFailure({ error })))
-          )
+        this.imageService.updateImageSize(action.image).pipe(
+          map(image =>  ImageActions.updateImageSizeSuccess({ image })),
+          catchError((error) =>
+            of(ImageActions.updateImageSizeFailure({ error }))))
       )
     )
   );

@@ -6,10 +6,12 @@ export interface AssetState {
   images: IImage[];
   videos: IVideo[];
   audios: IAudio[];
+  currentVideo: IVideo | null;
+  currentImage: IImage | null;
 }
 
 export interface AuthState {
-  user: IUser|null;
+  user: IUser | null;
   error: string;
 }
 

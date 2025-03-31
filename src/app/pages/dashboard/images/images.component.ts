@@ -5,16 +5,20 @@ import { Store } from '@ngrx/store';
 import { IImage } from '../../../data/models/dtos';
 import { ImageActions } from '../../../store/actions/assets.actions';
 import { selectImages } from '../../../store/app.selectors';
+import { ImageInfoComponent } from './image-info/image-info.component';
 
 @Component({
   selector: 'app-images',
-  imports: [],
+  imports: [
+    ImageInfoComponent
+  ],
   templateUrl: './images.component.html',
   styleUrl: './images.component.scss'
 })
 export class ImagesComponent implements OnInit {
   readonly images: Signal<IImage[] | undefined>;
   readonly images$;
+  selectedId: string = '';
 
   constructor(private store: Store) {
     this.images$ = this.store.select<IImage[]>(selectImages);
@@ -23,12 +27,10 @@ export class ImagesComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(ImageActions.loadImages());
-    this.images$.subscribe(images => {
-        images.forEach(image => {
-          this.store.dispatch(ImageActions.updateImageSize({ image }));
-        });
-      }
-    );
   }
 
+
+  selectImage(id: string) {
+    this.selectedId = id;
+  }
 }

@@ -5,11 +5,13 @@ import { VideoComponent, VideoStatus } from '../../../components/video/video.com
 import { IVideo } from '../../../data/models/dtos';
 import { VideoActions } from '../../../store/actions/assets.actions';
 import { selectVideos } from '../../../store/app.selectors';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-videos',
   imports: [
-    VideoComponent
+    VideoComponent,
+    RouterLink
   ],
   templateUrl: './videos.component.html',
   styleUrl: './videos.component.scss'
@@ -23,9 +25,5 @@ export class VideosComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(VideoActions.loadVideos());
-  }
-
-  updateVideoStatus($event: VideoStatus) {
-    console.log('update video status', $event);
   }
 }

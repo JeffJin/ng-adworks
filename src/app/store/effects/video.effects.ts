@@ -29,4 +29,20 @@ export class VideoEffects {
       )
     )
   );
+
+  loadVideoDetails$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(VideoActions.loadVideoDetails),
+      mergeMap((action: { videoId: string }) =>
+        this.videoService.getVideo(action.videoId)
+        .pipe(
+          map(video => {
+            video.assetType = 'Video';
+            return VideoActions.loadVideoDetailsSuccess({ video });
+          }),
+          catchError((error) => of(VideoActions.loadVideoDetailsFailure({ error })))
+        )
+      )
+    )
+  );
 }
